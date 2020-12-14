@@ -72,3 +72,10 @@ If you'd like to generate your own radar and lidar data, see the [Udacity Utilit
 ## Custom Libraries
 
 ```Eigen``` is already included in the repo. We majorly use two data structures, `VectorXd` and `MatrixXd` to build our algorithm. However, it must be noted that it does not initialize ```VectorXd``` or ```MatrixXd``` objects with zeros upon creation.
+
+## Output
+
+The image below shows three points at each timeframe. The red points are inputs from LiDAR, the blue points are inputs from RaDAR, while the green points are the EKF output, which ideally should be the path of the vehicle, as in this case.
+
+[image1]: ./working_ekf.PNG "Working EKF"
+![alt text][image1]
