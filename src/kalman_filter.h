@@ -3,7 +3,8 @@
 
 #include "Eigen/Dense"
 
-class KalmanFilter {
+class KalmanFilter 
+{
  public:
   /**
    * Constructor
@@ -16,20 +17,19 @@ class KalmanFilter {
   virtual ~KalmanFilter();
 
   /**
-   * Init Initializes Kalman filter
-   * @param x_in Initial state
-   * @param P_in Initial state covariance
-   * @param F_in Transition matrix
-   * @param H_in Measurement matrix
-   * @param R_in Measurement covariance matrix
-   * @param Q_in Process covariance matrix
+   * Init Initializes Kalman Filter
+   * @param x_in Initial State
+   * @param P_in Initial State Covariance Matrix
+   * @param F_in Transition Matrix
+   * @param H_in Measurement Matrix
+   * @param R_in Measurement Covariance Matrix
+   * @param Q_in Process Covariance Matrix
    */
   void Init(Eigen::VectorXd &x_in, Eigen::MatrixXd &P_in, Eigen::MatrixXd &F_in,
             Eigen::MatrixXd &H_in, Eigen::MatrixXd &R_in, Eigen::MatrixXd &Q_in);
 
   /**
-   * Prediction Predicts the state and the state covariance
-   * using the process model
+   * Prediction Predicts the state and the state covariance using the process model
    * @param delta_T Time between k and k+1 in s
    */
   void Predict();
@@ -46,22 +46,22 @@ class KalmanFilter {
    */
   void UpdateEKF(const Eigen::VectorXd &z);
 
-  // state vector
+  // State Vector
   Eigen::VectorXd x_;
 
-  // state covariance matrix
+  // State Covariance Matrix
   Eigen::MatrixXd P_;
 
-  // state transition matrix
+  // State Transition Matrix
   Eigen::MatrixXd F_;
 
-  // process covariance matrix
+  // Process Covariance Matrix
   Eigen::MatrixXd Q_;
 
-  // measurement matrix
+  // Measurement Matrix
   Eigen::MatrixXd H_;
 
-  // measurement covariance matrix
+  // Measurement Covariance Matrix
   Eigen::MatrixXd R_;
 };
 

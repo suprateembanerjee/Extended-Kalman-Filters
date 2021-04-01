@@ -10,51 +10,58 @@ using Eigen::VectorXd;
 using std::string;
 using std::vector;
 
-// for convenience
+// For convenience
 using json = nlohmann::json;
 
 // Checks if the SocketIO event has JSON data.
 // If there is data the JSON object in string format will be returned,
 // else the empty string "" will be returned.
-string hasData(string s) {
+string hasData(string s) 
+{
   auto found_null = s.find("null");
   auto b1 = s.find_first_of("[");
   auto b2 = s.find_first_of("]");
-  if (found_null != string::npos) {
+
+  if (found_null != string::npos)
     return "";
-  }
-  else if (b1 != string::npos && b2 != string::npos) {
+  else if (b1 != string::npos && b2 != string::npos)
     return s.substr(b1, b2 - b1 + 1);
-  }
+
   return "";
 }
 
-int main() {
+int main() 
+{
   uWS::Hub h;
 
   // Create a Kalman Filter instance
   FusionEKF fusionEKF;
 
-  // used to compute the RMSE later
+  // Used to compute the RMSE later
   Tools tools;
   vector<VectorXd> estimations;
   vector<VectorXd> ground_truth;
 
   h.onMessage([&fusionEKF,&tools,&estimations,&ground_truth]
               (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
-               uWS::OpCode opCode) {
+               uWS::OpCode opCode) 
+  {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
-    if (length && length > 2 && data[0] == '4' && data[1] == '2') {
+    if (length && length > 2 && data[0] == '4' && data[1] == '2') 
+    {
+
       auto s = hasData(string(data));
 
-      if (s != "") {
+      if (s != "") 
+      {
         auto j = json::parse(s);
 
         string event = j[0].get<string>();
         
-        if (event == "telemetry") {
+        if (event == "telemetry") 
+        {
           // j[1] is the data JSON object
           string sensor_measurement = j[1]["sensor_measurement"];
           
@@ -63,11 +70,12 @@ int main() {
           
           long long timestamp;
 
-          // reads first element from the current line
+          // Reads first element from the current line
           string sensor_type;
           iss >> sensor_type;
 
-          if (sensor_type.compare("L") == 0) {
+          if (sensor_type.compare("L") == 0) 
+          {
             meas_package.sensor_type_ = MeasurementPackage::LASER;
             meas_package.raw_measurements_ = VectorXd(2);
             float px;
@@ -77,7 +85,10 @@ int main() {
             meas_package.raw_measurements_ << px, py;
             iss >> timestamp;
             meas_package.timestamp_ = timestamp;
-          } else if (sensor_type.compare("R") == 0) {
+          } 
+
+          else if (sensor_type.compare("R") == 0) 
+          {
             meas_package.sensor_type_ = MeasurementPackage::RADAR;
             meas_package.raw_measurements_ = VectorXd(3);
             float ro;
@@ -110,8 +121,7 @@ int main() {
           // Call ProcessMeasurement(meas_package) for Kalman filter
           fusionEKF.ProcessMeasurement(meas_package);       
 
-          // Push the current estimated x,y positon from the Kalman filter's 
-          //   state vector
+          // Push the current estimated x,y positon from the Kalman filter's state vector
 
           VectorXd estimate(4);
 
@@ -137,7 +147,6 @@ int main() {
           msgJson["rmse_vx"] = RMSE(2);
           msgJson["rmse_vy"] = RMSE(3);
           auto msg = "42[\"estimate_marker\"," + msgJson.dump() + "]";
-          // std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
 
         }  // end "telemetry" if
@@ -150,20 +159,26 @@ int main() {
 
   }); // end h.onMessage
 
-  h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) {
+  h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) 
+  {
     std::cout << "Connected!!!" << std::endl;
   });
 
   h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, 
-                         char *message, size_t length) {
+                         char *message, size_t length) 
+  {
     ws.close();
     std::cout << "Disconnected" << std::endl;
   });
 
   int port = 4567;
-  if (h.listen(port)) {
+
+  if (h.listen(port)) 
+  {
     std::cout << "Listening to port " << port << std::endl;
-  } else {
+  } 
+  else 
+  {
     std::cerr << "Failed to listen to port" << std::endl;
     return -1;
   }

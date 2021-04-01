@@ -4,7 +4,8 @@
 #include <vector>
 #include "Eigen/Dense"
 
-class Tools {
+class Tools 
+{
  public:
   /**
    * Constructor.
